@@ -191,20 +191,20 @@ func ExampleSpec_Write() {
 					Enum{
 						Name: "Country",
 						Values: []EnumValue{
-							EnumValue{Name: "US", Tag: 0},
 							EnumValue{Name: "CA", Tag: 1, Comment: "Canada"},
-							EnumValue{Name: "GB", Tag: 2, Comment: "Great Britain"},
+							EnumValue{Name: "US", Tag: 0},
 							EnumValue{Name: "MX", Tag: 3, Comment: "Mexico"},
+							EnumValue{Name: "GB", Tag: 2, Comment: "Great Britain"},
 						},
 					},
 					Enum{
 						Name:       "PlaybackState",
 						AllowAlias: true,
 						Values: []EnumValue{
-							EnumValue{Name: "Waiting", Tag: 0},
 							EnumValue{Name: "Playing", Tag: 1},
-							EnumValue{Name: "Started", Tag: 1},
+							EnumValue{Name: "Waiting", Tag: 0},
 							EnumValue{Name: "Stopped", Tag: 2},
+							EnumValue{Name: "Started", Tag: 1},
 						},
 					},
 				},

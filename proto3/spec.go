@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"sort"
 )
 
 type ImportType string
@@ -300,6 +301,8 @@ func (c CustomMapField) Write() (string, error) {
 
 // Write a CustomMapField as a string
 func (e Enum) Write(level int) (string, error) {
+	sort.Sort(e)
+
 	v := fmt.Sprintf("%senum %s {\n", indentLevel(level), e.Name)
 	if e.AllowAlias {
 		v = fmt.Sprintf("%s%soption allow_alias = true;\n", v, indentLevel(level+1))
@@ -530,3 +533,7 @@ func indentLevel(level int) string {
 	}
 	return buffer.String()
 }
+
+func (a Enum) Len() int           { return len(a.Values) }
+func (a Enum) Swap(i, j int)      { a.Values[i], a.Values[j] = a.Values[j], a.Values[i] }
+func (a Enum) Less(i, j int) bool { return a.Values[i].Tag < a.Values[j].Tag }
