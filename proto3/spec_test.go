@@ -85,10 +85,19 @@ func TestSpec_Write(t *testing.T) {
 							ReservedTagRange{LowerTag: 6, UpperTag: 9},
 						},
 						Fields: []Field{
-							CustomField{Name: "Habitat", Typing: "string", Tag: 20, Rule: REQUIRED, Comment: "What am I?"},
-							ScalarField{Name: "Continent", Typing: STRING_TYPE, Tag: 21, Rule: OPTIONAL, Comment: "Where am I?"},
+							CustomField{Name: "Habitat", Typing: "string", Tag: 20, Comment: "What am I?"},
+							ScalarField{Name: "Continent", Typing: STRING_TYPE, Tag: 21, Rule: REPEATED, Comment: "Where am I?"},
 							MapField{Name: "LanguageMap", KeyTyping: STRING_TYPE, ValueTyping: STRING_TYPE, Tag: 22, Comment: "Super essential"},
 							CustomMapField{Name: "CustomMap", KeyTyping: STRING_TYPE, ValueTyping: "Event", Tag: 23},
+						},
+						OneOfs: []OneOf{
+							OneOf{
+								Name: "test_oneof",
+								Fields: []Field{
+									ScalarField{Name: "name", Typing: STRING_TYPE, Tag: 24, Comment: "Name"},
+									CustomField{Name: "sub_message", Typing: "Event", Tag: 25, Comment: "Sub-Message"},
+								},
+							},
 						},
 						Enums: []Enum{
 							Enum{
@@ -164,10 +173,19 @@ func ExampleSpec_Write() {
 					ReservedTagRange{LowerTag: 6, UpperTag: 9},
 				},
 				Fields: []Field{
-					CustomField{Name: "Habitat", Typing: "string", Tag: 20, Rule: REQUIRED, Comment: "What am I?"},
-					ScalarField{Name: "Continent", Typing: STRING_TYPE, Tag: 21, Rule: OPTIONAL, Comment: "Where am I?"},
+					CustomField{Name: "Habitat", Typing: "string", Tag: 20, Comment: "What am I?"},
+					ScalarField{Name: "Continent", Typing: STRING_TYPE, Tag: 21, Rule: REPEATED, Comment: "Where am I?"},
 					MapField{Name: "LanguageMap", KeyTyping: STRING_TYPE, ValueTyping: STRING_TYPE, Tag: 22, Comment: "Super essential"},
 					CustomMapField{Name: "CustomMap", KeyTyping: STRING_TYPE, ValueTyping: "Event", Tag: 23},
+				},
+				OneOfs: []OneOf{
+					OneOf{
+						Name: "test_oneof",
+						Fields: []Field{
+							ScalarField{Name: "name", Typing: STRING_TYPE, Tag: 24, Comment: "Name"},
+							CustomField{Name: "sub_message", Typing: "Event", Tag: 25, Comment: "Sub-Message"},
+						},
+					},
 				},
 				Enums: []Enum{
 					Enum{
@@ -233,9 +251,13 @@ func ExampleSpec_Write() {
 	//   reserved 2;
 	//   reserved 3;
 	//   reserved 6 to 9;
-	//   required string Habitat = 20;   // What am I?
-	//   optional string Continent = 21;   // Where am I?
+	//   string Habitat = 20;   // What am I?
+	//   repeated string Continent = 21;   // Where am I?
 	//   map<string, string> LanguageMap = 22;   // Super essential
 	//   map<string, Event> CustomMap = 23;
+	//   oneof test_oneof {
+	//     string name = 24;   // Name
+	//     Event sub_message = 25;   // Sub-Message
+	//   }
 	// }
 }

@@ -16,8 +16,6 @@ type FieldRule uint8
 // https://developers.google.com/protocol-buffers/docs/proto3#specifying-field-rules
 const (
 	NONE FieldRule = iota
-	REQUIRED
-	OPTIONAL
 	REPEATED
 )
 
@@ -67,6 +65,7 @@ type Message struct {
 	Messages       []Message
 	ReservedValues []Reserved
 	Fields         []Field
+	OneOfs         []OneOf
 	Enums          []Enum
 }
 
@@ -129,6 +128,14 @@ type CustomMapField struct {
 	Comment     string
 	KeyTyping   FieldType
 	ValueTyping string
+}
+
+// OneOf defines a set of fields for which only the most-recently-set field will be used.
+// https://developers.google.com/protocol-buffers/docs/proto3#oneof
+type OneOf struct {
+	Name    NameType
+	Fields  []Field
+	Comment string
 }
 
 // Enum defines an enumeration type of a set of values.
@@ -227,6 +234,15 @@ func (m *Message) Write(level int) (string, error) {
 		buffer.WriteString(fmt.Sprintf("%s%s\n", indentLevel(level+1), v))
 	}
 
+	// ONE-OF FIELDS
+	for _, v := range m.OneOfs {
+		v, err := v.Write(level + 1)
+		if err != nil {
+			return "", err
+		}
+		buffer.WriteString(fmt.Sprintf("%s\n", v))
+	}
+
 	buffer.WriteString(fmt.Sprintf("%s}\n", indentLevel(level)))
 	return buffer.String(), nil
 }
@@ -299,15 +315,26 @@ func (e Enum) Write(level int) (string, error) {
 	return v, nil
 }
 
+func (o OneOf) Write(level int) (string, error) {
+	v := fmt.Sprintf("%soneof %s {\n", indentLevel(level), o.Name)
+
+	for _, f := range o.Fields {
+		s, err := f.Write()
+		if err != nil {
+			return "", err
+		}
+		v = fmt.Sprintf("%s%s%s\n", v, indentLevel(level+1), s)
+	}
+
+	v = fmt.Sprintf("%s%s}", v, indentLevel(level))
+	return v, nil
+}
+
 // Write a FieldRule as a string
 func (f *FieldRule) Write() string {
 	switch *f {
 	case NONE:
 		return ""
-	case REQUIRED:
-		return "required "
-	case OPTIONAL:
-		return "optional "
 	case REPEATED:
 		return "repeated "
 	default:
@@ -480,6 +507,16 @@ func (e *Enum) Validate() error {
 	}
 	if len(e.Values) == 0 {
 		return errors.New("Enum must have non-empty set of values")
+	}
+	return nil
+}
+
+func (o OneOf) Validate() error {
+	if o.Name == "" {
+		return errors.New("OneOf must have a non-empty name")
+	}
+	if len(o.Fields) == 0 {
+		return errors.New("OneOf must have non-empty set of values")
 	}
 	return nil
 }
