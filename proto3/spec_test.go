@@ -135,7 +135,7 @@ func TestSpec_Write(t *testing.T) {
 	}
 }
 
-func ExampleWrite() {
+func ExampleSpec_Write() {
 	spec := &Spec{
 		Package: "foo",
 		Messages: []Message{
