@@ -179,7 +179,7 @@ func (s *Spec) Write() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		buffer.WriteString(fmt.Sprintf("%s\n", v))
+		buffer.WriteString(fmt.Sprintf("\n%s\n", v))
 	}
 
 	for _, msg := range s.Messages {
