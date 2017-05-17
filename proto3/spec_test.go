@@ -61,7 +61,8 @@ func TestSpec_Write(t *testing.T) {
 				Package: "foo",
 				Messages: []Message{
 					Message{
-						Name: "Beacon",
+						Name:    "Beacon",
+						Comment: "Beacon Message containing event information",
 						Messages: []Message{
 							Message{
 								Name: "Event",
@@ -92,7 +93,8 @@ func TestSpec_Write(t *testing.T) {
 						},
 						OneOfs: []OneOf{
 							OneOf{
-								Name: "test_oneof",
+								Name:    "test_oneof",
+								Comment: "Can have a name or sub-message, but not both",
 								Fields: []Field{
 									ScalarField{Name: "name", Typing: STRING_TYPE, Tag: 24, Comment: "Name"},
 									CustomField{Name: "sub_message", Typing: "Event", Tag: 25, Comment: "Sub-Message"},
@@ -149,7 +151,8 @@ func ExampleSpec_Write() {
 		Package: "foo",
 		Messages: []Message{
 			Message{
-				Name: "Beacon",
+				Name:    "Beacon",
+				Comment: "Beacon Message containing event information",
 				Messages: []Message{
 					Message{
 						Name: "Event",
@@ -180,7 +183,8 @@ func ExampleSpec_Write() {
 				},
 				OneOfs: []OneOf{
 					OneOf{
-						Name: "test_oneof",
+						Name:    "test_oneof",
+						Comment: "Can have a name or sub-message, but not both",
 						Fields: []Field{
 							ScalarField{Name: "name", Typing: STRING_TYPE, Tag: 24, Comment: "Name"},
 							CustomField{Name: "sub_message", Typing: "Event", Tag: 25, Comment: "Sub-Message"},
@@ -189,7 +193,8 @@ func ExampleSpec_Write() {
 				},
 				Enums: []Enum{
 					Enum{
-						Name: "Country",
+						Name:    "Country",
+						Comment: "Country code",
 						Values: []EnumValue{
 							EnumValue{Name: "CA", Tag: 1, Comment: "Canada"},
 							EnumValue{Name: "US", Tag: 0},
@@ -223,23 +228,28 @@ func ExampleSpec_Write() {
 	// syntax = "proto3";
 	// package foo;
 	//
+	// // Beacon Message containing event information
 	// message Beacon {
 	//   message Event {
 	//     reserved 1;
 	//     reserved 2;
 	//     reserved 3;
 	//     reserved 6 to 9;
+	//
 	//     repeated string Habitat = 10;   // What am I?
 	//     string Continent = 11;   // Where am I?
 	//     map<string, string> LanguageMap = 12;   // Super essential
+	//
 	//   }
 	//
+	//   // Country code
 	//   enum Country {
 	//     US = 0;
 	//     CA = 1;   // Canada
 	//     GB = 2;   // Great Britain
 	//     MX = 3;   // Mexico
 	//   }
+	//
 	//   enum PlaybackState {
 	//     option allow_alias = true;
 	//     Waiting = 0;
@@ -247,14 +257,18 @@ func ExampleSpec_Write() {
 	//     Started = 1;
 	//     Stopped = 2;
 	//   }
+	//
 	//   reserved 1;
 	//   reserved 2;
 	//   reserved 3;
 	//   reserved 6 to 9;
+	//
 	//   string Habitat = 20;   // What am I?
 	//   repeated string Continent = 21;   // Where am I?
 	//   map<string, string> LanguageMap = 22;   // Super essential
 	//   map<string, Event> CustomMap = 23;
+	//
+	//   // Can have a name or sub-message, but not both
 	//   oneof test_oneof {
 	//     string name = 24;   // Name
 	//     Event sub_message = 25;   // Sub-Message

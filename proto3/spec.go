@@ -63,6 +63,7 @@ type Spec struct {
 // Message is a single Protobuf message definition.
 type Message struct {
 	Name           string
+	Comment        string
 	Messages       []Message
 	ReservedValues []Reserved
 	Fields         []Field
@@ -145,6 +146,7 @@ type Enum struct {
 	Name       NameType
 	Values     []EnumValue
 	AllowAlias bool
+	Comment    string
 }
 
 // EnumValue describes a single enumerated value within an enumeration.
@@ -197,6 +199,9 @@ func (m *Message) Write(level int) (string, error) {
 	}
 
 	var buffer bytes.Buffer
+	if m.Comment != "" {
+		buffer.WriteString(fmt.Sprintf("%s// %s\n", indentLevel(level), m.Comment))
+	}
 	buffer.WriteString(fmt.Sprintf("%smessage %s {\n", indentLevel(level), m.Name))
 
 	// NESTED MESSAGE TYPES
@@ -205,7 +210,7 @@ func (m *Message) Write(level int) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		buffer.WriteString(fmt.Sprintf("%s\n", msgSpec))
+		buffer.WriteString(fmt.Sprintf("%s\n\n", msgSpec))
 	}
 
 	// ENUMS
@@ -214,25 +219,31 @@ func (m *Message) Write(level int) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		buffer.WriteString(fmt.Sprintf("%s\n", v))
+		buffer.WriteString(fmt.Sprintf("%s\n\n", v))
 	}
 
 	// RESERVED TAGS
-	for _, reservedValue := range m.ReservedValues {
-		v, err := reservedValue.Write()
-		if err != nil {
-			return "", err
+	if len(m.ReservedValues) > 0 {
+		for _, reservedValue := range m.ReservedValues {
+			v, err := reservedValue.Write()
+			if err != nil {
+				return "", err
+			}
+			buffer.WriteString(fmt.Sprintf("%sreserved %s;\n", indentLevel(level+1), v))
 		}
-		buffer.WriteString(fmt.Sprintf("%sreserved %s;\n", indentLevel(level+1), v))
+		buffer.WriteString("\n")
 	}
 
 	// FIELDS
-	for _, v := range m.Fields {
-		v, err := v.Write()
-		if err != nil {
-			return "", err
+	if len(m.Fields) > 0 {
+		for _, v := range m.Fields {
+			v, err := v.Write()
+			if err != nil {
+				return "", err
+			}
+			buffer.WriteString(fmt.Sprintf("%s%s\n", indentLevel(level+1), v))
 		}
-		buffer.WriteString(fmt.Sprintf("%s%s\n", indentLevel(level+1), v))
+		buffer.WriteString("\n")
 	}
 
 	// ONE-OF FIELDS
@@ -244,7 +255,7 @@ func (m *Message) Write(level int) (string, error) {
 		buffer.WriteString(fmt.Sprintf("%s\n", v))
 	}
 
-	buffer.WriteString(fmt.Sprintf("%s}\n", indentLevel(level)))
+	buffer.WriteString(fmt.Sprintf("%s}", indentLevel(level)))
 	return buffer.String(), nil
 }
 
@@ -303,7 +314,11 @@ func (c CustomMapField) Write() (string, error) {
 func (e Enum) Write(level int) (string, error) {
 	sort.Sort(e)
 
-	v := fmt.Sprintf("%senum %s {\n", indentLevel(level), e.Name)
+	var v string
+	if e.Comment != "" {
+		v = fmt.Sprintf("%s// %s\n", indentLevel(level), e.Comment)
+	}
+	v = fmt.Sprintf("%s%senum %s {\n", v, indentLevel(level), e.Name)
 	if e.AllowAlias {
 		v = fmt.Sprintf("%s%soption allow_alias = true;\n", v, indentLevel(level+1))
 	}
@@ -319,7 +334,11 @@ func (e Enum) Write(level int) (string, error) {
 }
 
 func (o OneOf) Write(level int) (string, error) {
-	v := fmt.Sprintf("%soneof %s {\n", indentLevel(level), o.Name)
+	var v string
+	if o.Comment != "" {
+		v = fmt.Sprintf("%s// %s\n", indentLevel(level), o.Comment)
+	}
+	v = fmt.Sprintf("%s%soneof %s {\n", v, indentLevel(level), o.Name)
 
 	for _, f := range o.Fields {
 		s, err := f.Write()
