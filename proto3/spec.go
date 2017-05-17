@@ -58,6 +58,7 @@ type Spec struct {
 	Package  string       // https://developers.google.com/protocol-buffers/docs/proto3#packages
 	Imports  []ImportType // https://developers.google.com/protocol-buffers/docs/proto3#importing-definitions
 	Messages []Message
+	Enums    []Enum
 }
 
 // Message is a single Protobuf message definition.
@@ -162,6 +163,15 @@ func (s *Spec) Write() (string, error) {
 	for _, importPackage := range s.Imports {
 		buffer.WriteString(fmt.Sprintf("import \"%s\";\n", importPackage))
 	}
+
+	for _, v := range s.Enums {
+		v, err := v.Write(0)
+		if err != nil {
+			return "", err
+		}
+		buffer.WriteString(fmt.Sprintf("%s\n", v))
+	}
+
 	for _, msg := range s.Messages {
 		msgSpec, err := msg.Write(0) // write message at level zero (0)
 		if err != nil {
@@ -352,6 +362,11 @@ func (s *Spec) Validate() error {
 	}
 	for _, msg := range s.Messages {
 		if err := msg.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, v := range s.Enums {
+		if err := v.Validate(); err != nil {
 			return err
 		}
 	}
