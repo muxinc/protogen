@@ -7,37 +7,46 @@ import (
 	"sort"
 )
 
+// ImportType applies to a package import statement
 type ImportType string
+
+// NameType applies to a field name
 type NameType string
+
+// TagType applies to a field tag value
 type TagType uint8
+
+// FieldType applies to the data-type of a field value
 type FieldType uint8
+
+// FieldRule specifies additional rules (e.g. repeated) that can be set on a field
 type FieldRule uint8
 
 // Rules that can be applied to message fields
 // https://developers.google.com/protocol-buffers/docs/proto3#specifying-field-rules
 const (
-	NONE FieldRule = iota
-	REPEATED
+	None FieldRule = iota
+	Repeated
 )
 
 // Built-in field types
 // https://developers.google.com/protocol-buffers/docs/proto3#scalar
 const (
-	DOUBLE_TYPE FieldType = iota
-	FLOAT_TYPE
-	INT32_TYPE
-	INT64_TYPE
-	UINT32_TYPE
-	UINT64_TYPE
-	SINT32_TYPE
-	SINT64_TYPE
-	FIXED32_TYPE
-	FIXED64_TYPE
-	SFIXED32_TYPE
-	SFIXED64_TYPE
-	BOOL_TYPE
-	STRING_TYPE
-	BYTES_TYPE
+	DoubleType FieldType = iota
+	FloatType
+	Int32Type
+	Int64Type
+	UInt32Type
+	UInt64Type
+	SInt32Type
+	SInt64Type
+	Fixed32Type
+	Fixed64Type
+	SFixed32Type
+	SFixed64Type
+	BoolType
+	StringType
+	BytesType
 )
 
 // Reserved describes a tag that can be written to a Protobuf.
@@ -355,9 +364,9 @@ func (o OneOf) Write(level int) (string, error) {
 // Write a FieldRule as a string
 func (f *FieldRule) Write() string {
 	switch *f {
-	case NONE:
+	case None:
 		return ""
-	case REPEATED:
+	case Repeated:
 		return "repeated "
 	default:
 		return ""
@@ -367,35 +376,35 @@ func (f *FieldRule) Write() string {
 // Write a FieldType as a string
 func (f *FieldType) Write() string {
 	switch *f {
-	case DOUBLE_TYPE:
+	case DoubleType:
 		return "double"
-	case FLOAT_TYPE:
+	case FloatType:
 		return "float"
-	case INT32_TYPE:
+	case Int32Type:
 		return "int32"
-	case INT64_TYPE:
+	case Int64Type:
 		return "int64"
-	case UINT32_TYPE:
+	case UInt32Type:
 		return "uint32"
-	case UINT64_TYPE:
+	case UInt64Type:
 		return "uint64"
-	case SINT32_TYPE:
+	case SInt32Type:
 		return "sint32"
-	case SINT64_TYPE:
+	case SInt64Type:
 		return "sint64"
-	case FIXED32_TYPE:
+	case Fixed32Type:
 		return "fixed32"
-	case FIXED64_TYPE:
+	case Fixed64Type:
 		return "fixed64"
-	case SFIXED32_TYPE:
+	case SFixed32Type:
 		return "sfixed32"
-	case SFIXED64_TYPE:
+	case SFixed64Type:
 		return "sfixed64"
-	case BOOL_TYPE:
+	case BoolType:
 		return "bool"
-	case STRING_TYPE:
+	case StringType:
 		return "string"
-	case BYTES_TYPE:
+	case BytesType:
 		return "bytes"
 	default:
 		return ""
@@ -459,24 +468,24 @@ func (s ScalarField) Validate() error {
 }
 
 // Validate field attributes
-func (s ReservedName) Validate() error {
-	if s.Name == "" {
+func (r ReservedName) Validate() error {
+	if r.Name == "" {
 		return errors.New("ReservedName field must have a non-empty name")
 	}
 	return nil
 }
 
 // Validate field attributes
-func (s ReservedTagValue) Validate() error {
+func (r ReservedTagValue) Validate() error {
 	return nil
 }
 
 // Validate field attributes
-func (s ReservedTagRange) Validate() error {
-	if s.LowerTag < 0 {
+func (r ReservedTagRange) Validate() error {
+	if r.LowerTag < 0 {
 		return errors.New("ReservedTagRange lower-tag must be greater-than-or-equal to zero")
 	}
-	if s.LowerTag >= s.UpperTag {
+	if r.LowerTag >= r.UpperTag {
 		return errors.New("ReservedTagRange upper-tag must be greater-than lower-tag")
 	}
 	return nil
@@ -498,31 +507,33 @@ func (c CustomMapField) Validate() error {
 	if c.Name == "" {
 		return errors.New("CustomMapField name must have non-empty name")
 	}
-	if c.KeyTyping < 0 || c.KeyTyping == DOUBLE_TYPE || c.KeyTyping == FLOAT_TYPE || c.KeyTyping == BYTES_TYPE {
+	if c.KeyTyping < 0 || c.KeyTyping == DoubleType || c.KeyTyping == FloatType || c.KeyTyping == BytesType {
 		return fmt.Errorf("Map field %s must use a scalar integral or string type for the map key", c.Name)
 	}
-	if c.Rule == REPEATED {
+	if c.Rule == Repeated {
 		return errors.New("CustomMapField cannot use repeated rule")
 	}
 	return nil
 }
 
+// Validate map attributes
 func (m MapField) Validate() error {
 	if m.Name == "" {
 		return errors.New("MapField must have a non-empty name")
 	}
-	if m.KeyTyping < 0 || m.KeyTyping == DOUBLE_TYPE || m.KeyTyping == FLOAT_TYPE || m.KeyTyping == BYTES_TYPE {
+	if m.KeyTyping < 0 || m.KeyTyping == DoubleType || m.KeyTyping == FloatType || m.KeyTyping == BytesType {
 		return fmt.Errorf("Map field %s must use a scalar integral or string type for the map key", m.Name)
 	}
 	if m.ValueTyping < 0 {
 		return fmt.Errorf("Map field %s must have a type specified for the map value", m.Name)
 	}
-	if m.Rule == REPEATED {
+	if m.Rule == Repeated {
 		return errors.New("MapField cannot use repeated rule")
 	}
 	return nil
 }
 
+// Validate enum attributes
 func (e *Enum) Validate() error {
 	if e.Name == "" {
 		return errors.New("Enum must have a non-empty name")
@@ -533,6 +544,7 @@ func (e *Enum) Validate() error {
 	return nil
 }
 
+// Validate oneof attributes
 func (o OneOf) Validate() error {
 	if o.Name == "" {
 		return errors.New("OneOf must have a non-empty name")
@@ -553,6 +565,11 @@ func indentLevel(level int) string {
 	return buffer.String()
 }
 
-func (a Enum) Len() int           { return len(a.Values) }
-func (a Enum) Swap(i, j int)      { a.Values[i], a.Values[j] = a.Values[j], a.Values[i] }
-func (a Enum) Less(i, j int) bool { return a.Values[i].Tag < a.Values[j].Tag }
+// Len reports the number of enum values.
+func (e Enum) Len() int { return len(e.Values) }
+
+// Swap entries in the enum at the given positions.
+func (e Enum) Swap(i, j int) { e.Values[i], e.Values[j] = e.Values[j], e.Values[i] }
+
+// Less returns true iff the tag at the first position is less than the tag at the second position.
+func (e Enum) Less(i, j int) bool { return e.Values[i].Tag < e.Values[j].Tag }

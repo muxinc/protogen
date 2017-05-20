@@ -20,7 +20,7 @@ func TestScalarField_Validate(t *testing.T) {
 	}{
 		{
 			name:    "Valid Scalar field",
-			fields:  fields{Name: "MyMap", Tag: 1, Typing: STRING_TYPE},
+			fields:  fields{Name: "MyMap", Tag: 1, Typing: StringType},
 			wantErr: false,
 		},
 	}
@@ -73,9 +73,9 @@ func TestSpec_Write(t *testing.T) {
 									ReservedTagRange{LowerTag: 6, UpperTag: 9},
 								},
 								Fields: []Field{
-									CustomField{Name: "Habitat", Typing: "string", Tag: 10, Rule: REPEATED, Comment: "What am I?"},
-									ScalarField{Name: "Continent", Typing: STRING_TYPE, Tag: 11, Comment: "Where am I?"},
-									MapField{Name: "LanguageMap", KeyTyping: STRING_TYPE, ValueTyping: STRING_TYPE, Tag: 12, Comment: "Super essential"},
+									CustomField{Name: "Habitat", Typing: "string", Tag: 10, Rule: Repeated, Comment: "What am I?"},
+									ScalarField{Name: "Continent", Typing: StringType, Tag: 11, Comment: "Where am I?"},
+									MapField{Name: "LanguageMap", KeyTyping: StringType, ValueTyping: StringType, Tag: 12, Comment: "Super essential"},
 								},
 							},
 						},
@@ -87,16 +87,16 @@ func TestSpec_Write(t *testing.T) {
 						},
 						Fields: []Field{
 							CustomField{Name: "Habitat", Typing: "string", Tag: 20, Comment: "What am I?"},
-							ScalarField{Name: "Continent", Typing: STRING_TYPE, Tag: 21, Rule: REPEATED, Comment: "Where am I?"},
-							MapField{Name: "LanguageMap", KeyTyping: STRING_TYPE, ValueTyping: STRING_TYPE, Tag: 22, Comment: "Super essential"},
-							CustomMapField{Name: "CustomMap", KeyTyping: STRING_TYPE, ValueTyping: "Event", Tag: 23},
+							ScalarField{Name: "Continent", Typing: StringType, Tag: 21, Rule: Repeated, Comment: "Where am I?"},
+							MapField{Name: "LanguageMap", KeyTyping: StringType, ValueTyping: StringType, Tag: 22, Comment: "Super essential"},
+							CustomMapField{Name: "CustomMap", KeyTyping: StringType, ValueTyping: "Event", Tag: 23},
 						},
 						OneOfs: []OneOf{
 							OneOf{
 								Name:    "test_oneof",
 								Comment: "Can have a name or sub-message, but not both",
 								Fields: []Field{
-									ScalarField{Name: "name", Typing: STRING_TYPE, Tag: 24, Comment: "Name"},
+									ScalarField{Name: "name", Typing: StringType, Tag: 24, Comment: "Name"},
 									CustomField{Name: "sub_message", Typing: "Event", Tag: 25, Comment: "Sub-Message"},
 								},
 							},
@@ -163,9 +163,9 @@ func ExampleSpec_Write() {
 							ReservedTagRange{LowerTag: 6, UpperTag: 9},
 						},
 						Fields: []Field{
-							CustomField{Name: "Habitat", Typing: "string", Tag: 10, Rule: REPEATED, Comment: "What am I?"},
-							ScalarField{Name: "Continent", Typing: STRING_TYPE, Tag: 11, Comment: "Where am I?"},
-							MapField{Name: "LanguageMap", KeyTyping: STRING_TYPE, ValueTyping: STRING_TYPE, Tag: 12, Comment: "Super essential"},
+							CustomField{Name: "Habitat", Typing: "string", Tag: 10, Rule: Repeated, Comment: "What am I?"},
+							ScalarField{Name: "Continent", Typing: StringType, Tag: 11, Comment: "Where am I?"},
+							MapField{Name: "LanguageMap", KeyTyping: StringType, ValueTyping: StringType, Tag: 12, Comment: "Super essential"},
 						},
 					},
 				},
@@ -177,16 +177,16 @@ func ExampleSpec_Write() {
 				},
 				Fields: []Field{
 					CustomField{Name: "Habitat", Typing: "string", Tag: 20, Comment: "What am I?"},
-					ScalarField{Name: "Continent", Typing: STRING_TYPE, Tag: 21, Rule: REPEATED, Comment: "Where am I?"},
-					MapField{Name: "LanguageMap", KeyTyping: STRING_TYPE, ValueTyping: STRING_TYPE, Tag: 22, Comment: "Super essential"},
-					CustomMapField{Name: "CustomMap", KeyTyping: STRING_TYPE, ValueTyping: "Event", Tag: 23},
+					ScalarField{Name: "Continent", Typing: StringType, Tag: 21, Rule: Repeated, Comment: "Where am I?"},
+					MapField{Name: "LanguageMap", KeyTyping: StringType, ValueTyping: StringType, Tag: 22, Comment: "Super essential"},
+					CustomMapField{Name: "CustomMap", KeyTyping: StringType, ValueTyping: "Event", Tag: 23},
 				},
 				OneOfs: []OneOf{
 					OneOf{
 						Name:    "test_oneof",
 						Comment: "Can have a name or sub-message, but not both",
 						Fields: []Field{
-							ScalarField{Name: "name", Typing: STRING_TYPE, Tag: 24, Comment: "Name"},
+							ScalarField{Name: "name", Typing: StringType, Tag: 24, Comment: "Name"},
 							CustomField{Name: "sub_message", Typing: "Event", Tag: 25, Comment: "Sub-Message"},
 						},
 					},
