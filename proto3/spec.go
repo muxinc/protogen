@@ -541,6 +541,15 @@ func (e *Enum) Validate() error {
 	if len(e.Values) == 0 {
 		return errors.New("Enum must have non-empty set of values")
 	}
+	if e.AllowAlias == false {
+		tags := make(map[TagType]NameType)
+		for _, v := range e.Values {
+			if _, exists := tags[v.Tag]; exists {
+				return fmt.Errorf("Enum value has tag that is already in use while aliasing is not allowed: %s", v.Name)
+			}
+			tags[v.Tag] = v.Name
+		}
+	}
 	return nil
 }
 
