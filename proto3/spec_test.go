@@ -1,8 +1,10 @@
-package proto3
+package proto3_test
 
 import (
 	"fmt"
 	"testing"
+
+	. "github.com/muxinc/protogen/proto3"
 )
 
 func TestScalarField_Validate(t *testing.T) {
