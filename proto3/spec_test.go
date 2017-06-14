@@ -62,11 +62,11 @@ func TestSpec_Write(t *testing.T) {
 			fields: fields{
 				Package: "foo",
 				Messages: []Message{
-					Message{
+					{
 						Name:    "Beacon",
 						Comment: "Beacon Message containing event information",
 						Messages: []Message{
-							Message{
+							{
 								Name: "Event",
 								ReservedValues: []Reserved{
 									ReservedTagValue{Tag: 1},
@@ -94,7 +94,7 @@ func TestSpec_Write(t *testing.T) {
 							CustomMapField{Name: "CustomMap", KeyTyping: StringType, ValueTyping: "Event", Tag: 23},
 						},
 						OneOfs: []OneOf{
-							OneOf{
+							{
 								Name:    "test_oneof",
 								Comment: "Can have a name or sub-message, but not both",
 								Fields: []Field{
@@ -104,23 +104,23 @@ func TestSpec_Write(t *testing.T) {
 							},
 						},
 						Enums: []Enum{
-							Enum{
+							{
 								Name: "Country",
 								Values: []EnumValue{
-									EnumValue{Name: "US", Tag: 0},
-									EnumValue{Name: "CA", Tag: 1, Comment: "Canada"},
-									EnumValue{Name: "GB", Tag: 2, Comment: "Great Britain"},
-									EnumValue{Name: "MX", Tag: 3, Comment: "Mexico"},
+									{Name: "US", Tag: 0},
+									{Name: "CA", Tag: 1, Comment: "Canada"},
+									{Name: "GB", Tag: 2, Comment: "Great Britain"},
+									{Name: "MX", Tag: 3, Comment: "Mexico"},
 								},
 							},
-							Enum{
+							{
 								Name:       "PlaybackState",
 								AllowAlias: true,
 								Values: []EnumValue{
-									EnumValue{Name: "Waiting", Tag: 0},
-									EnumValue{Name: "Playing", Tag: 1},
-									EnumValue{Name: "Started", Tag: 1},
-									EnumValue{Name: "Stopped", Tag: 2},
+									{Name: "Waiting", Tag: 0},
+									{Name: "Playing", Tag: 1},
+									{Name: "Started", Tag: 1},
+									{Name: "Stopped", Tag: 2},
 								},
 							},
 						},
@@ -152,11 +152,11 @@ func ExampleSpec_Write() {
 	spec := &Spec{
 		Package: "foo",
 		Messages: []Message{
-			Message{
+			{
 				Name:    "Beacon",
 				Comment: "Beacon Message containing event information",
 				Messages: []Message{
-					Message{
+					{
 						Name: "Event",
 						ReservedValues: []Reserved{
 							ReservedTagValue{Tag: 1},
@@ -184,7 +184,7 @@ func ExampleSpec_Write() {
 					CustomMapField{Name: "CustomMap", KeyTyping: StringType, ValueTyping: "Event", Tag: 23},
 				},
 				OneOfs: []OneOf{
-					OneOf{
+					{
 						Name:    "test_oneof",
 						Comment: "Can have a name or sub-message, but not both",
 						Fields: []Field{
@@ -194,24 +194,24 @@ func ExampleSpec_Write() {
 					},
 				},
 				Enums: []Enum{
-					Enum{
+					{
 						Name:    "Country",
 						Comment: "Country code",
 						Values: []EnumValue{
-							EnumValue{Name: "CA", Tag: 1, Comment: "Canada"},
-							EnumValue{Name: "US", Tag: 0},
-							EnumValue{Name: "MX", Tag: 3, Comment: "Mexico"},
-							EnumValue{Name: "GB", Tag: 2, Comment: "Great Britain"},
+							{Name: "CA", Tag: 1, Comment: "Canada"},
+							{Name: "US", Tag: 0},
+							{Name: "MX", Tag: 3, Comment: "Mexico"},
+							{Name: "GB", Tag: 2, Comment: "Great Britain"},
 						},
 					},
-					Enum{
+					{
 						Name:       "PlaybackState",
 						AllowAlias: true,
 						Values: []EnumValue{
-							EnumValue{Name: "Playing", Tag: 1},
-							EnumValue{Name: "Waiting", Tag: 0},
-							EnumValue{Name: "Stopped", Tag: 2},
-							EnumValue{Name: "Started", Tag: 1},
+							{Name: "Playing", Tag: 1},
+							{Name: "Waiting", Tag: 0},
+							{Name: "Stopped", Tag: 2},
+							{Name: "Started", Tag: 1},
 						},
 					},
 				},
