@@ -1,4 +1,5 @@
-# protogen  [![GoDoc](https://godoc.org/github.com/go-kit/kit?status.svg)](https://godoc.org/github.com/muxinc/protogen/proto3)
+# protogen [![GoDoc](https://godoc.org/github.com/go-kit/kit?status.svg)](https://godoc.org/github.com/muxinc/protogen/proto3) [![Go Report Card](https://goreportcard.com/badge/github.com/muxinc/protogen)](https://goreportcard.com/report/github.com/muxinc/protogen) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 [Protobuf](https://developers.google.com/protocol-buffers/docs/proto3) Specification Generator written in Go
 
 This library was developed by [Mux](https://www.mux.com/) to programmatically generate Protobuf specifications.
