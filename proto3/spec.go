@@ -63,10 +63,11 @@ type Field interface {
 
 // Spec represents a top-level Protobuf specification.
 type Spec struct {
-	Package  string       // https://developers.google.com/protocol-buffers/docs/proto3#packages
-	Imports  []ImportType // https://developers.google.com/protocol-buffers/docs/proto3#importing-definitions
-	Messages []Message
-	Enums    []Enum
+	Package     string       // https://developers.google.com/protocol-buffers/docs/proto3#packages
+	JavaPackage string       // https://developers.google.com/protocol-buffers/docs/reference/java-generated#package
+	Imports     []ImportType // https://developers.google.com/protocol-buffers/docs/proto3#importing-definitions
+	Messages    []Message
+	Enums       []Enum
 }
 
 // Message is a single Protobuf message definition.
@@ -178,6 +179,9 @@ func (s *Spec) Write() (string, error) {
 	buffer.WriteString("syntax = \"proto3\";\n")
 	if len(s.Package) > 0 {
 		buffer.WriteString(fmt.Sprintf("package %s;\n", s.Package))
+	}
+	if len(s.JavaPackage) > 0 {
+		buffer.WriteString(fmt.Sprintf("option java_package = \"%s\";\n", s.JavaPackage))
 	}
 	for _, importPackage := range s.Imports {
 		buffer.WriteString(fmt.Sprintf("import \"%s\";\n", importPackage))

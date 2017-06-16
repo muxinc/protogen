@@ -150,7 +150,8 @@ func TestSpec_Write(t *testing.T) {
 
 func ExampleSpec_Write() {
 	spec := &Spec{
-		Package: "foo",
+		Package:     "foo",
+		JavaPackage: "com.foo",
 		Messages: []Message{
 			{
 				Name:    "Beacon",
@@ -229,6 +230,7 @@ func ExampleSpec_Write() {
 	// Output:
 	// syntax = "proto3";
 	// package foo;
+	// option java_package = "com.foo";
 	//
 	// // Beacon Message containing event information
 	// message Beacon {
