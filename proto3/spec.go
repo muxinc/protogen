@@ -63,6 +63,7 @@ type Field interface {
 
 // Spec represents a top-level Protobuf specification.
 type Spec struct {
+	FileComment string
 	Package     string       // https://developers.google.com/protocol-buffers/docs/proto3#packages
 	JavaPackage string       // https://developers.google.com/protocol-buffers/docs/reference/java-generated#package
 	Imports     []ImportType // https://developers.google.com/protocol-buffers/docs/proto3#importing-definitions
@@ -176,6 +177,9 @@ func (s *Spec) Write() (string, error) {
 	}
 
 	var buffer bytes.Buffer
+	if len(s.FileComment) > 0 {
+		buffer.WriteString(fmt.Sprintf("// %s\n", s.FileComment))
+	}
 	buffer.WriteString("syntax = \"proto3\";\n")
 	if len(s.Package) > 0 {
 		buffer.WriteString(fmt.Sprintf("package %s;\n", s.Package))

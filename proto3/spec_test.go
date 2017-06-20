@@ -150,6 +150,7 @@ func TestSpec_Write(t *testing.T) {
 
 func ExampleSpec_Write() {
 	spec := &Spec{
+		FileComment: "DO NOT EDIT - File generated using protogen",
 		Package:     "foo",
 		JavaPackage: "com.foo",
 		Messages: []Message{
@@ -228,6 +229,7 @@ func ExampleSpec_Write() {
 	}
 
 	// Output:
+	// // DO NOT EDIT - File generated using protogen
 	// syntax = "proto3";
 	// package foo;
 	// option java_package = "com.foo";
