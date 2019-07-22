@@ -65,6 +65,7 @@ type Field interface {
 type Spec struct {
 	FileComment string
 	Package     string       // https://developers.google.com/protocol-buffers/docs/proto3#packages
+	GoPackage   string       // https://developers.google.com/protocol-buffers/docs/reference/go-generated#package
 	JavaPackage string       // https://developers.google.com/protocol-buffers/docs/reference/java-generated#package
 	Imports     []ImportType // https://developers.google.com/protocol-buffers/docs/proto3#importing-definitions
 	Messages    []Message
@@ -183,6 +184,9 @@ func (s *Spec) Write() (string, error) {
 	buffer.WriteString("syntax = \"proto3\";\n")
 	if len(s.Package) > 0 {
 		buffer.WriteString(fmt.Sprintf("package %s;\n", s.Package))
+	}
+	if len(s.GoPackage) > 0 {
+		buffer.WriteString(fmt.Sprintf("option go_package = \"%s\";\n", s.GoPackage))
 	}
 	if len(s.JavaPackage) > 0 {
 		buffer.WriteString(fmt.Sprintf("option java_package = \"%s\";\n", s.JavaPackage))

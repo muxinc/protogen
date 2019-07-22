@@ -152,6 +152,7 @@ func ExampleSpec_Write() {
 	spec := &Spec{
 		FileComment: "DO NOT EDIT - File generated using protogen",
 		Package:     "foo",
+		GoPackage:   "example.com/foo",
 		JavaPackage: "com.foo",
 		Messages: []Message{
 			{
@@ -232,6 +233,7 @@ func ExampleSpec_Write() {
 	// // DO NOT EDIT - File generated using protogen
 	// syntax = "proto3";
 	// package foo;
+	// option go_package = "example.com/foo";
 	// option java_package = "com.foo";
 	//
 	// // Beacon Message containing event information
